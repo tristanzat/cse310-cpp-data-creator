@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="DataCreator.vcxproj" Id="dcfb10a2-55b1-4e92-b1d3-5f204d42a209" />
+  <Project Path="data_creator.vcxproj" Id="dcfb10a2-55b1-4e92-b1d3-5f204d42a209" />
 </Solution>
