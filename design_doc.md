@@ -5,10 +5,10 @@ the mean, minimum, maximum, standard deviation, and count (number of elements).
 
 ## Provided value breakdown
 
-- **std dev**: $\sigma = \sqrt{\frac{\sum_{i=1}^{N} (x_i - \mu)^2}{N}}$
+- $\sigma = \sqrt{\frac{\sum_{i=1}^{N} (x_i - \mu)^2}{N}}$
 	- σ: Population standard deviation (provided)
 	- μ: Population mean (provided) 
-	- $\(x_{i}\)$: Each individual data point (need to generate [besides $x_{min}$ and $x_{max}$])
+	- $x_{i}$: Each individual data point (need to generate [besides $x_{min}$ and $x_{max}$])
 	- N: Total number of data points in the population (provided)
 	- Σ: Sum of all values
 
