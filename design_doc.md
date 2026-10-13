@@ -25,5 +25,5 @@ decreases loss, keep it; if it increases loss, discard it. The loop would end wh
 
 ## File overview
 
-data_creator - the main file; will create and tweak the data and calculate loss.
-data_calculator - handles performing calculations; will have functions to calculate mean and standard deviation given data.
+- `data_creator` - the main file; will create and tweak the data and calculate loss.
+- `data_calculator` - handles performing calculations; will have functions to calculate mean and standard deviation given data.
