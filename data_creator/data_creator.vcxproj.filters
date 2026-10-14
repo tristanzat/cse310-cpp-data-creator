@@ -18,13 +18,5 @@
     <ClCompile Include="data_creator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="data_calculator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="data_calculator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

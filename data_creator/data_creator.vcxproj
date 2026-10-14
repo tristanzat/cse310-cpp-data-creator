@@ -139,11 +139,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="data_calculator.cpp" />
     <ClCompile Include="data_creator.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="data_calculator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
