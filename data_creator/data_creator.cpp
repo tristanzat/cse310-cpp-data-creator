@@ -11,20 +11,43 @@ std::mt19937 gen(rd());
 
 // Constants for looping
 double LOSS_LIMIT = 0.000001;
-double MAX_ITER = 500;
+double MAX_ITER = 1000;
 
-// Function prototypes
-list<double> init_values(const double& min, const double& max,
+static list<double> init_values(const double& min, const double& max,
     const int& count);
-list<double> tweak_values(const list<double>& init_list);
-double calculate_loss(const double& curr_mean, const double& target_mean,
+static list<double> tweak_values(const list<double>& init_list);
+static double calculate_loss(const double& curr_mean, const double& target_mean,
     const double& curr_std_dev, const double& target_std_dev);
 
 namespace DataCalculator {
-    static double calculate_average(const list<double>& data);
+    /// <summary>
+    /// Calculates the average of a list
+    /// </summary>
+    /// <param name="data">List of doubles to get average of</param>
+    /// <returns>The average of the values in the list</returns>
+    static double calculate_average(const list<double>& data)
+    {
+        // sum of all values / count
+
+        double sum = 0.0;
+
+        for (double x : data)
+        {
+            sum += x;
+        }
+
+        return sum / data.size();
+    }
+
+    /// <summary>
+    /// Calculates the standard deviation of a list
+    /// </summary>
+    /// <param name="data">List of doubles to get standard deviation of</param>
+    /// <returns>The standard deviation of that list</returns>
     static double calculate_std_dev(const list<double>& data)
     {
         // std dev = sqrt((sum from i=1 to N(x_i - avg)^2)/N)
+
         double sum = 0.0;
         double avg = calculate_average(data);
 
@@ -34,19 +57,6 @@ namespace DataCalculator {
         }
 
         return std::sqrt(sum / data.size());
-    }
-
-    static double calculate_average(const list<double>& data)
-    {
-        // sum of all values / count
-        double sum = 0.0;
-
-        for (double x : data)
-        {
-            sum += x;
-        }
-
-        return sum / data.size();
     }
 }
 
@@ -81,7 +91,7 @@ int main()
         std::cout << "Loop " << std::setw(5) << iter + 1
             << " | Initial loss: " << std::fixed << std::setprecision(6) << std::setw(10) << loss;
         
-        // Need to tweak values then calculate loss
+        // Tweak values then calculate new loss
         list<double> new_data = tweak_values(generated_data);
 
         // Calculate final loss
@@ -117,7 +127,8 @@ int main()
 /// <param name="min">Minimum value of dataset</param>
 /// <param name="max">Maximum value of dataset</param>
 /// <param name="count">Number of items in dataset</param>
-list<double> init_values(const double& min, const double& max, const int& count)
+/// <returns>A list with `count` items between `min` and `max`, inclusive</returns>
+static list<double> init_values(const double& min, const double& max, const int& count)
 {
     // Initialize return list
     list<double> return_list;
@@ -145,7 +156,7 @@ list<double> init_values(const double& min, const double& max, const int& count)
 /// </summary>
 /// <param name="init_list">The list to copy and modify</param>
 /// <returns>The passed-in list with modified values</returns>
-list<double> tweak_values(const list<double>& init_list)
+static list<double> tweak_values(const list<double>& init_list)
 {
     list<double> return_list = init_list;
 
@@ -162,7 +173,15 @@ list<double> tweak_values(const list<double>& init_list)
     return return_list;
 }
 
-double calculate_loss(const double& curr_mean, const double& target_mean,
+/// <summary>
+/// Calculates a loss value given parameters
+/// </summary>
+/// <param name="curr_mean">current mean</param>
+/// <param name="target_mean">target mean</param>
+/// <param name="curr_std_dev">current standard deviation</param>
+/// <param name="target_std_dev">target standard deviation</param>
+/// <returns>Loss value</returns>
+static double calculate_loss(const double& curr_mean, const double& target_mean,
     const double& curr_std_dev, const double& target_std_dev)
 {
     return std::pow((curr_mean - target_mean), 2) + std::pow((curr_std_dev - target_std_dev), 2);
