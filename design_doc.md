@@ -23,7 +23,9 @@ $\(\mu_{current} - \mu_{target}\)^2 + \(\sigma_{current} - \sigma_{target}\)^2$
 The program would then loop and apply small, random adjustments to the elements (excluding min and max). If a change
 decreases loss, keep it; if it increases loss, discard it. The loop would end when Loss is near 0 (some small value like 0.00001)
 
-## File overview
+## Function overview
 
-- `data_creator` - the main file; will create and tweak the data and calculate loss.
-- `data_calculator` - handles performing calculations; will have functions to calculate mean and standard deviation given data.
+- `DataCalculator` - namespace for static calculation functions (average and standard deviation)
+- `init_values` - initializes the list by inserting the min, max, and random values in between
+- `tweak_values` - modifies the list to try to minimize loss
+- `calculate_loss` - calculates loss using the above equation
