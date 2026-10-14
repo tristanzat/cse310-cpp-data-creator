@@ -1,27 +1,23 @@
 # Overview
 
-{Provide a description of the software that you wrote to demonstrate the C++ language.}
+This software uses C++ to generate a data set that meets certain requirements. More detailed info can be found
+in the [design document](design_doc.md).
 
-{Describe your purpose for writing this software.}
+This demonstrates the processing power that C++ has when working with datasets and numbers. This also helped me
+get a better understanding of C++ syntax.
 
-[Software Demo Video](http://youtube.link.goes.here)
+[Demonstration Video](http://youtube.com)
 
 # Development Environment
 
-{Describe the tools that you used to develop the software}
-
-{Describe the programming language that you used and any libraries.}
+I used the Visual Studio IDE (VS Community Edition 2026) with the `Desktop development with C++` workload to develop and test my code.
 
 # Useful Websites
 
-{Make a list of websites that you found helpful in this project}
-
-- [Web Site Name](http://url.link.goes.here)
-- [Web Site Name](http://url.link.goes.here)
+- [W3Schools](https://www.w3schools.com/cpp/)
+- [cppreference.com](https://cppreference.com/)
 
 # Future Work
-
-{Make a list of things that you need to fix, improve, and add in the future.}
 
 - Item 1
 - Item 2
