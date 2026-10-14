@@ -53,14 +53,22 @@ namespace DataCalculator {
 int main()
 {
     list<double> generated_data;
-    double target_mean = 80;
+    double target_mean = 80.0;
     double target_std_dev = 8.5;
-    double min = 68;
-    double max = 92;
+    double min = 68.0;
+    double max = 92.0;
     int count = 8;
 
     // Initialize list with values
     generated_data = init_values(min, max, count);
+
+    // Display initial values
+    std::cout << "[";
+    for (double x : generated_data)
+    {
+        std::cout << std::fixed << std::setprecision(2) << std::setw(4) << x << ", ";
+    }
+    std::cout << "]" << std::endl;
 
     // Loop until loss goes down or we run into max iterations
     double loss = 1.0;
@@ -94,9 +102,9 @@ int main()
 
     // Display final values
     std::cout << "[";
-    for (int x : generated_data)
+    for (double x : generated_data)
     {
-        std::cout << x << ", ";
+        std::cout << std::fixed << std::setprecision(2) << std::setw(4) << x << ", ";
     }
     std::cout << "]" << std::endl;
 
