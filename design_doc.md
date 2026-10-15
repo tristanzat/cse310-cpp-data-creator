@@ -19,13 +19,20 @@ $\(\mu_{current} - \mu_{target}\)^2 + \(\sigma_{current} - \sigma_{target}\)^2$
 The program would then loop and apply small, random adjustments to the elements (excluding min and max). If a change
 decreases loss, keep it; if it increases loss, discard it. The loop would end when loss is near 0 (some small value like 0.00001).
 
+I ended up not fully implementing this solution; it would just re-randomize the list elements and hope it minimized loss.
+I was stuck, so I decided to scrap this idea and try a different solution.
+
 ## Reworked solution
 
-A better solution to this would be applying a linear rescaling transformation. This would occur every iteration until it is
-near 0 (some small value like 0.000001).
+A better solution to this would be applying a linear rescaling transformation. The program would start with an array of size N
+containing $x_{min}$, $x_{max}$, and random values in between.
+
+The transformation would be applied over many iterations until the difference between the generated data's mean and standard
+deviation and the target mean and standard deviation are near 0 (some small value like 0.000001).
 
 ## Function overview
 
 - `DataCalculator` - namespace for static calculation functions (average and standard deviation)
 - `init_values` - initializes the list by inserting the min, max, and random values in between
 - `tweak_values` - modifies the list by applying linear rescaling transformation
+- `print_list` - writes the contents of a list to the console in the format [12.00, 23.21, 13.40]
