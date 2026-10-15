@@ -10,14 +10,16 @@ std::mt19937 gen(rd());
 
 
 // Constants for looping
-double LOSS_LIMIT = 0.000001;
-double MAX_ITER = 1000;
+double ERROR_LIMIT = 0.000001;
+int MAX_ITER = 1000;
+int SAME_DIFF_ITER_MAX = 10;
 
 static list<double> init_values(const double& min, const double& max,
     const int& count);
-static list<double> tweak_values(const list<double>& init_list);
-static double calculate_loss(const double& curr_mean, const double& target_mean,
+static list<double> tweak_values(const list<double>& init_list,
+    const double& curr_mean, const double& target_mean,
     const double& curr_std_dev, const double& target_std_dev);
+static void print_list(const list<double>& list);
 
 namespace DataCalculator {
     /// <summary>
@@ -64,59 +66,68 @@ int main()
 {
     list<double> generated_data;
     double target_mean = 80.0;
-    double target_std_dev = 8.5;
-    double min = 68.0;
-    double max = 92.0;
-    int count = 8;
+    double target_std_dev = 15;
+    double min = 10.0;
+    double max = 100.0;
+    int count = 10;
 
     // Initialize list with values
     generated_data = init_values(min, max, count);
 
     // Display initial values
-    std::cout << "[";
-    for (double x : generated_data)
-    {
-        std::cout << std::fixed << std::setprecision(2) << std::setw(4) << x << ", ";
-    }
-    std::cout << "]" << std::endl;
+    print_list(generated_data);
 
-    // Loop until loss goes down or we run into max iterations
-    double loss = 1.0;
+    // Loop until standard deviation and mean are near target, we run into max iterations,
+    // or we hit max iterations with same mean and std dev (impossible targets)
+    double curr_mean = 1.0;
+    double curr_std_dev = 1.0;
     int iter = 0;
-    while (loss > LOSS_LIMIT && iter < MAX_ITER)
+    int same_count = 0;
+    bool impossible_targets = false;
+    while ((std::abs(curr_mean - target_mean) > ERROR_LIMIT || std::abs(curr_std_dev - target_std_dev) > ERROR_LIMIT)
+        && iter < MAX_ITER && !impossible_targets)
     {
-        // Calculate current loss
-        loss = calculate_loss(DataCalculator::calculate_average(generated_data),
-            target_mean, DataCalculator::calculate_std_dev(generated_data), target_std_dev);
-        std::cout << "Loop " << std::setw(5) << iter + 1
-            << " | Initial loss: " << std::fixed << std::setprecision(6) << std::setw(10) << loss;
-        
-        // Tweak values then calculate new loss
-        list<double> new_data = tweak_values(generated_data);
+        // Get current mean and standard deviation
+        double new_mean = DataCalculator::calculate_average(generated_data);
+        double new_std_dev = DataCalculator::calculate_std_dev(generated_data);
 
-        // Calculate final loss
-        double new_loss = calculate_loss(DataCalculator::calculate_average(new_data),
-            target_mean, DataCalculator::calculate_std_dev(new_data), target_std_dev);
-
-        // Display final loss of this loop
-        std::cout << " | Final loss: " << std::fixed << std::setprecision(6) << std::setw(10) << new_loss << std::endl;
-
-        // "Save" list changes if it decreased loss
-        if (new_loss < loss)
+        // Compare to previous mean and standard deviation to see if we have set impossible targets
+        if (std::abs(new_mean - curr_mean) < ERROR_LIMIT * 0.1 && std::abs(new_std_dev - curr_std_dev) < ERROR_LIMIT * 0.1)
         {
-            generated_data = new_data;
+            same_count++;
+            if (same_count > SAME_DIFF_ITER_MAX)
+            {
+                impossible_targets = true;
+            }
+        }
+        else
+        {
+            same_count = 0;
         }
 
-        iter++;
+        curr_mean = new_mean;
+        curr_std_dev = new_std_dev;
+        
+        // Tweak values
+        generated_data = tweak_values(generated_data, curr_mean, target_mean, curr_std_dev, target_std_dev);
+
+        // Display info and increment iteration counter
+        std::cout << "Loop " << std::setw(5) << ++iter
+            << " | Current mean: " << std::fixed << std::setprecision(6) << std::setw(10) << curr_mean
+            << " | Target mean" << std::fixed << std::setprecision(6) << std::setw(10) << target_mean
+            << " | Current std dev" << std::fixed << std::setprecision(6) << std::setw(10) << curr_std_dev
+            << " | Target std dev" << std::fixed << std::setprecision(6) << std::setw(10) << target_std_dev
+            << std::endl;
+    }
+
+    // Display message if user set impossible targets
+    if (impossible_targets)
+    {
+        std::cout << "Targets determined to be impossible to reach. Showing closest data:" << std::endl;
     }
 
     // Display final values
-    std::cout << "[";
-    for (double x : generated_data)
-    {
-        std::cout << std::fixed << std::setprecision(2) << std::setw(4) << x << ", ";
-    }
-    std::cout << "]" << std::endl;
+    print_list(generated_data);
 
     return 0;
 }
@@ -152,37 +163,50 @@ static list<double> init_values(const double& min, const double& max, const int&
 }
 
 /// <summary>
-/// Modifies values of a given list and returns a new list with those tweaked values.
+/// Modifies values of a given list by applying a linear rescaling transformation.
 /// </summary>
-/// <param name="init_list">The list to copy and modify</param>
-/// <returns>The passed-in list with modified values</returns>
-static list<double> tweak_values(const list<double>& init_list)
+/// <param name="init_list">List to transform</param>
+/// <param name="curr_mean">Current mean</param>
+/// <param name="target_mean">Target mean</param>
+/// <param name="curr_std_dev">Current standard deviation</param>
+/// <param name="target_std_dev">Target standard deviation</param>
+/// <returns>The transformed list</returns>
+static list<double> tweak_values(const list<double>& init_list, const double& curr_mean,
+    const double& target_mean, const double& curr_std_dev, const double& target_std_dev)
 {
     list<double> return_list = init_list;
+    const double min = *return_list.begin();
+    const double max = *std::next(return_list.begin(), 1);
 
-    // Set up random number generation
-    std::uniform_real_distribution<double> distr(*return_list.begin(),
-        *std::next(return_list.begin(), 1));
-
-    // Loop through the list starting at begin + 2 so we don't modify min or max
+    // new value = target_mean + (old value - current_mean) * (target_std_dev / curr_std_dev)
     auto list_start = std::next(return_list.begin(), 2);
-    std::for_each(list_start, return_list.end(), [&distr](auto& num) {
-        num = distr(gen);
+    std::for_each(list_start, return_list.end(), [&](auto& num) {
+        // Perform transformation
+        num = target_mean + (num - curr_mean) * (target_std_dev / curr_std_dev);
+        // Clamp if necessary
+        num = (num < min) ? min : num;
+        num = (num > max) ? max : num;
         });
 
     return return_list;
 }
 
-/// <summary>
-/// Calculates a loss value given parameters
-/// </summary>
-/// <param name="curr_mean">current mean</param>
-/// <param name="target_mean">target mean</param>
-/// <param name="curr_std_dev">current standard deviation</param>
-/// <param name="target_std_dev">target standard deviation</param>
-/// <returns>Loss value</returns>
-static double calculate_loss(const double& curr_mean, const double& target_mean,
-    const double& curr_std_dev, const double& target_std_dev)
+static void print_list(const list<double>& list)
 {
-    return std::pow((curr_mean - target_mean), 2) + std::pow((curr_std_dev - target_std_dev), 2);
+    int i = 0;
+    int count = list.size();
+    std::cout << "[";
+
+    for (const auto& item : list)
+    {
+        std::cout << std::fixed << std::setprecision(2) << std::setw(4) << item;
+        i++;
+        // Add comma if it's not the last item in the list
+        if (i < count)
+        {
+            std::cout << ", ";
+        }
+    }
+
+    std::cout << "]" << std::endl;
 }
