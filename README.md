@@ -8,6 +8,14 @@ get a better understanding of C++ syntax.
 
 [Demonstration Video](http://youtube.com)
 
+# Running the code
+
+The program takes in command line arguments when being run. With a terminal open in the directory with the compiled executable, run
+`.\data_creator.exe [input_file_path] [output_file_path | verbosity] [verbosity]`
+
+- If the second argument is not a valid file (does not end in .txt), the code assumes that it is verbosity.
+- `verbosity` is either `verbose` (prints case, beginning list, and end list) or `extra-verbose` (prints mean and standard deviation each loop compared to target as well)
+
 # Development Environment
 
 I used the Visual Studio IDE (VS Community Edition 2026) with the `Desktop development with C++` workload to develop and test my code.
@@ -19,6 +27,7 @@ I used the Visual Studio IDE (VS Community Edition 2026) with the `Desktop devel
 
 # Future Work
 
-- Item 1
-- Item 2
-- Item 3
+- Update the algorithm to detect anomalies in the dataset
+- Make the algorithm accept data in multiple formats
+- Tweak algorithm to have dynamic scaling ratio depending on input parameters
+ 

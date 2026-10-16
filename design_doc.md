@@ -33,6 +33,11 @@ deviation and the target mean and standard deviation are near 0 (some small valu
 ## Function overview
 
 - `DataCalculator` - namespace for static calculation functions (average and standard deviation)
+- `modification_loop` - handles the main loop of modifying the list until limits are reached
+- `valid_data` - handles checking if input data is good enough to iterate on or already impossible
+- `display_loop_info` - displays the standard deviation and mean of the current list compared to the targets
 - `init_values` - initializes the list by inserting the min, max, and random values in between
 - `tweak_values` - modifies the list by applying linear rescaling transformation
 - `print_list` - writes the contents of a list to the console in the format [12.00, 23.21, 13.40]
+- `get_data_from_file` - returns a list of the parameters we need for each line in the file
+- `write_data_to_file` - writes the test case and output list to a file
