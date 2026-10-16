@@ -141,9 +141,6 @@
   <ItemGroup>
     <ClCompile Include="data_creator.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="datafile.txt" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
