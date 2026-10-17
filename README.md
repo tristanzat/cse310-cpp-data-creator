@@ -6,7 +6,7 @@ in the [design document](design_doc.md).
 This demonstrates the processing power that C++ has when working with datasets and numbers. This also helped me
 get a better understanding of C++ syntax.
 
-[Demonstration Video](http://youtube.com)
+[Demonstration Video](https://youtu.be/GP9WTECP_Q8)
 
 # Running the code
 
